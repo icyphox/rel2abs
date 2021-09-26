@@ -13,11 +13,13 @@ func rel2abs(n *html.Node, nurl *url.URL) error {
 		for _, a := range n.Attr {
 			if a.Key == "href" {
 				rel, err := url.Parse(a.Val)
+				fmt.Println("rel:", rel)
 				if err != nil {
 					return fmt.Errorf("relative url: %w\n", err)
 				}
 
 				a.Val = nurl.ResolveReference(rel).String()
+				fmt.Println("resolved:", a.Val)
 			}
 		}
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
@@ -29,10 +31,6 @@ func rel2abs(n *html.Node, nurl *url.URL) error {
 
 // Converts all relative URLs in htmlContent to absolute URLs,
 // resolved against a base URL.
-// Example, with base as http://example.com/foo:
-//    <a href="#fn-1">
-// becomes
-//    <a href="http://example.com/foo#fn-1">
 func Rel2Abs(htmlContent []byte, base string) ([]byte, error) {
 	doc, err := html.Parse(bytes.NewReader(htmlContent))
 	if err != nil {
