@@ -1,0 +1,22 @@
+rel2abs
+-------
+
+Go library to convert all relative URLs to absolute ones, resolved
+against a specified base URL.
+
+
+EXAMPLE
+
+    import (
+        "fmt"
+
+        "git.icyphox.sh/rel2abs"
+    )
+
+    func main() {
+        htmlRel := `<html><body><a href="#footnote-1">[1]</a></body></html>`
+        htmlAbs, err := rel2abs.Rel2Abs([]byte(htmlRel), "http://foo.com/bar")
+
+        fmt.Println(htmlAbs)
+        // <html><body><a href="http://foo.com/bar#footnote-1">[1]</a></body></html>
+    }
