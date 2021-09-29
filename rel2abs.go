@@ -6,25 +6,24 @@ import (
 	"net/url"
 
 	"golang.org/x/net/html"
+	"golang.org/x/net/html/atom"
 )
 
 func rel2abs(n *html.Node, nurl *url.URL) error {
-	if n.Type == html.ElementNode && n.Data == "a" {
-		for _, a := range n.Attr {
-			if a.Key == "href" {
-				rel, err := url.Parse(a.Val)
-				fmt.Println("rel:", rel)
+	if n.Type == html.ElementNode && n.DataAtom == atom.A {
+		for i := range n.Attr {
+			if n.Attr[i].Key == "href" {
+				rel, err := url.Parse(n.Attr[i].Val)
 				if err != nil {
 					return fmt.Errorf("relative url: %w\n", err)
 				}
 
-				a.Val = nurl.ResolveReference(rel).String()
-				fmt.Println("resolved:", a.Val)
+				n.Attr[i].Val = nurl.ResolveReference(rel).String()
 			}
 		}
-		for c := n.FirstChild; c != nil; c = c.NextSibling {
-			rel2abs(c, nurl)
-		}
+	}
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		rel2abs(c, nurl)
 	}
 	return nil
 }
