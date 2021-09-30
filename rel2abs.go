@@ -30,7 +30,7 @@ func rel2abs(n *html.Node, nurl *url.URL) error {
 
 // Converts all relative URLs in htmlContent to absolute URLs,
 // resolved against a base URL.
-func Rel2Abs(htmlContent []byte, base string) ([]byte, error) {
+func Convert(htmlContent []byte, base string) ([]byte, error) {
 	doc, err := html.Parse(bytes.NewReader(htmlContent))
 	if err != nil {
 		return nil, fmt.Errorf("html parse: %w\n", err)
